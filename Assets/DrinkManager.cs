@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using TMPro;
 using Michsky;
@@ -26,8 +27,18 @@ public class DrinkManager : MonoBehaviour
         }
         set
         {
-            waterScaleY = Mathf.Clamp(value, 0f, 1.3f);
+            waterScaleY = Mathf.Clamp(value, 0.01f, 1.3f);
         }
+    }
+
+    public void setMaxNeedyWater(int value)
+    {
+        maxNeedyWater = value;
+    }
+    
+    public int getMaxNeedyWater()
+    {
+        return maxNeedyWater;
     }
 
     // Start is called before the first frame update
@@ -39,7 +50,7 @@ public class DrinkManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        WaterInfoUpdate();
+        // WaterInfoUpdate();
     }
 
     public void InitWaterInfo()
@@ -48,16 +59,19 @@ public class DrinkManager : MonoBehaviour
         needyWaterText.text = maxNeedyWater.ToString() + "ml";
         waterSlider.value = ((int)((float)(needyWater) / (float)(maxNeedyWater) * 100));
         needyWaterSliderText.text = maxNeedyWater.ToString() + "ml";
+        waterTfm.DOScaleY(1.3f, 0.5f);
     }
 
     public void WaterInfoUpdate()
     {
         waterSlider.value = ((int)((float)(needyWater) / (float)(maxNeedyWater) * 100));
-        needyWaterSliderText.text = needyWater.ToString() + "ml";
+        needyWaterSliderText.text = maxNeedyWater.ToString() + "ml";
+        needyWaterText.text = needyWater.ToString() + "ml";
         WaterScaleY = (1.3f) * (float)(needyWater) / (float)(maxNeedyWater);
         Vector3 waterScale = waterTfm.localScale;
-        waterScale.y = WaterScaleY;
-        waterTfm.localScale = waterScale;
+        // waterScale.y = WaterScaleY;
+        // waterTfm.localScale = waterScale;
+        waterTfm.DOScaleY(waterScaleY, 1f);
     }
 
     public void drinkWater()
